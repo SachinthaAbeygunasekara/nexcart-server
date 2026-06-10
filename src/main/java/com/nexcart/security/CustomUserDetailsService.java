@@ -31,6 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     public void registerUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole("Customer");
         userRepository.save(user);
     }
 }
