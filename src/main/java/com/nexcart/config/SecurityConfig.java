@@ -3,6 +3,7 @@ package com.nexcart.config;
 import com.nexcart.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -31,14 +32,17 @@ public class SecurityConfig {
                 .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(request ->
                         request
-                                .requestMatchers("/auth/**")
+                                .requestMatchers(HttpMethod.OPTIONS, "/**")
+                                .permitAll()
+
+                                .requestMatchers("/auth/**","/products/**")
                                 .permitAll()
 
                                 .requestMatchers("/admin/**")
-                                .hasRole("ADMIN")
+                                .hasAnyAuthority("Admin")
 
                                 .requestMatchers("/customer/**")
-                                .hasRole("CUSTOMER")
+                                .hasAnyAuthority("Customer")
 
                                 .anyRequest()
                                 .authenticated()
