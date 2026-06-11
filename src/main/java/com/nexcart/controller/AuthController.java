@@ -35,8 +35,8 @@ public class AuthController {
 
         User user = new User(
                 registerRequest.username(),
-                registerRequest.email(),
-                registerRequest.password()
+                registerRequest.password(),
+                registerRequest.email()
         );
         customUserDetailsService.registerUser(user);
         return ResponseEntity
