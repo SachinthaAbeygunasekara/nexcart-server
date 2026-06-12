@@ -38,6 +38,9 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/**","/products/**")
                                 .permitAll()
 
+                                .requestMatchers(HttpMethod.GET, "/categories/**")
+                                .permitAll()
+
                                 .requestMatchers("/admin/**")
                                 .hasAnyAuthority("Admin")
 
