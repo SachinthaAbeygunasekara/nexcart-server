@@ -1,5 +1,6 @@
 package com.nexcart.dto.product;
 
+import com.nexcart.entity.Category;
 import com.nexcart.enums.ProductStatus;
 import lombok.*;
 
@@ -14,7 +15,7 @@ public class ProductResponse {
     private String description;
     private Double price;
     private String imageUrl;
-    Integer categoryId;
+    private Category category;
     private Integer quantity;
     private ProductStatus status;
 
