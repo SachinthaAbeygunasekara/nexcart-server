@@ -47,6 +47,12 @@ public class SecurityConfig {
                                 .requestMatchers("/customer/**")
                                 .hasAnyAuthority("Customer")
 
+                                .requestMatchers("/stripe/webhook")
+                                .permitAll()
+
+                                .requestMatchers("/payments/**")
+                                .hasAuthority("Customer")
+
                                 .anyRequest()
                                 .authenticated()
                 )

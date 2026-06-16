@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
 
@@ -28,4 +29,6 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
             ORDER BY o.createdAt
             """)
     List<Order> findDeliveredOrders();
+
+    Optional<Order> findByStripeSessionId(String stripeSessionId);
 }

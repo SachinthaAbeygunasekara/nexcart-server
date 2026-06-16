@@ -1,6 +1,7 @@
 package com.nexcart.entity;
 
 import com.nexcart.enums.OrderStatus;
+import com.nexcart.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -42,4 +43,9 @@ public class Order {
             orphanRemoval = true
     )
     private List<OrderItem> items;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
+
+    private String stripeSessionId;
 }
