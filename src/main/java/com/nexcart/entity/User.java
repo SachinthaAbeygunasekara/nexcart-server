@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -21,6 +23,13 @@ public class User {
     private String role;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Cart cart;
+
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+    private String address;
+    private String profileImage;
+    private LocalDateTime updatedAt;
 
     public User(String username, String password, String email){
         this.username = username;
