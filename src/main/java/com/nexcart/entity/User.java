@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,6 +32,13 @@ public class User {
     private String address;
     private String profileImage;
     private LocalDateTime updatedAt;
+
+    @OneToMany(
+            mappedBy = "customer",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Review> reviews = new ArrayList<>();
 
     public User(String username, String password, String email){
         this.username = username;

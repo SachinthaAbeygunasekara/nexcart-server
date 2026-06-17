@@ -18,5 +18,7 @@ public class ProductResponse {
     private Category category;
     private Integer quantity;
     private ProductStatus status;
+    private Double averageRating;
+    private Long totalReviews;
 
 }
