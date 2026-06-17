@@ -4,6 +4,7 @@ import com.nexcart.dto.product.ProductRequest;
 import com.nexcart.dto.product.ProductResponse;
 import com.nexcart.entity.Product;
 import com.nexcart.repository.ProductRepository;
+import com.nexcart.repository.ReviewRepository;
 import com.nexcart.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ReviewRepository reviewRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -24,10 +26,15 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = modelMapper.map(request, Product.class);
 
-        Product savedProduct =
-                productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
 
-        return modelMapper.map(savedProduct, ProductResponse.class);
+        ProductResponse response =
+                modelMapper.map(savedProduct, ProductResponse.class);
+
+        response.setAverageRating(0.0);
+        response.setTotalReviews(0L);
+
+        return response;
     }
 
     @Override
@@ -35,24 +42,20 @@ public class ProductServiceImpl implements ProductService {
 
         return productRepository.findAll()
                 .stream()
-                .map(product -> modelMapper.map(
-                        product,
-                        ProductResponse.class
-                ))
+                .map(this::mapToResponse)
                 .toList();
     }
 
     @Override
     public ProductResponse getProductById(Integer id) {
 
-        Product product =
-                productRepository.findById(id)
-                        .orElseThrow(() ->
-                                new EntityNotFoundException(
-                                        "Product not found with id: " + id
-                                ));
+        Product product = productRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Product not found with id: " + id
+                        ));
 
-        return modelMapper.map(product, ProductResponse.class);
+        return mapToResponse(product);
     }
 
     @Override
@@ -66,13 +69,9 @@ public class ProductServiceImpl implements ProductService {
 
         modelMapper.map(request, product);
 
-        Product updatedProduct =
-                productRepository.save(product);
+        Product updatedProduct = productRepository.save(product);
 
-        return modelMapper.map(
-                updatedProduct,
-                ProductResponse.class
-        );
+        return mapToResponse(updatedProduct);
     }
 
     @Override
@@ -85,6 +84,28 @@ public class ProductServiceImpl implements ProductService {
         }
 
         productRepository.deleteById(id);
+    }
+
+    private ProductResponse mapToResponse(Product product) {
+
+        ProductResponse response =
+                modelMapper.map(product, ProductResponse.class);
+
+        Double averageRating =
+                reviewRepository.getAverageRating(product.getId());
+
+        Long totalReviews =
+                reviewRepository.getTotalReviews(product.getId());
+
+        response.setAverageRating(
+                averageRating == null ? 0.0 : averageRating
+        );
+
+        response.setTotalReviews(
+                totalReviews == null ? 0L : totalReviews
+        );
+
+        return response;
     }
 
 }

@@ -31,4 +31,18 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
     List<Order> findDeliveredOrders();
 
     Optional<Order> findByStripeSessionId(String stripeSessionId);
+
+    @Query("""
+            SELECT COUNT(oi) > 0
+            FROM Order o
+            JOIN o.items oi
+            WHERE o.customer.id = :customerId
+            AND oi.product.id = :productId
+            AND o.status = :status
+            """)
+    boolean existsPurchasedProduct(
+            Integer customerId,
+            Integer productId,
+            OrderStatus status
+    );
 }
